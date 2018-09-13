@@ -67,7 +67,7 @@ tr:nth-child(even) {
 
 <div class="container">
 
-    <h1 style="font-size: 40px; color: #6cb2eb;">Applying For Leave Here</h1>
+    <h1 style="font-size: 40px; color: #6cb2eb;">Applying  Leave Here</h1>
 
     <div style="position: relative">
       <div class="w3-container w3-teal" align="center">

@@ -2,9 +2,7 @@
 @extends('layouts.app')
 @section('content')
 
-
-
- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
 
@@ -43,9 +41,9 @@ tr:nth-child(even) {
 
       <strong >Set Total Yearly Leave Day</strong>
 
-<input id="setLeave" class="form-control" type="text">
-<p  style=" font-size: 14px; color: red;">**Important : Employee Can Take Leave Upto This Days **</p>
-	  <button  id="daily" name="daily" class="btn btn-info "> Set Fixed </button>
+          <input id="setLeave" class="form-control" type="text">
+      <p  style=" font-size: 14px; color: red;">**Important : Employee Can Take Leave Upto This Days **</p>
+	  <button  id="setLeaveBtn" name="setLeaveBtn" class="btn btn-info "> Set Fixed </button>
 </div>
 </div>
 <div class="column">
@@ -53,11 +51,48 @@ tr:nth-child(even) {
 <div class="card">
  
 <div class="container">
-    <h4><b id="days" style="font-size: 40px; color: #6cb2eb;">0 Days</b></h4>
-    <p>Total Yearly Leave</p>
+  @foreach ($leaveRecords as $item)
+  @if($item->status == 'active')
+                          
+                            <h4><b id="days" style="font-size: 40px; color: #6cb2eb;">{{$item->total_days}} Days</b></h4>
+                            <p>Total Yearly Leave</p>
+  @endif
+  @endforeach
+
+    
 </div>
 </div>
 
+
+
+<table id="yearly_table">
+                  
+                  <tr>
+                    <th>ID</th>
+                    <th>Total Days</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                    
+                  </tr>
+  
+  
+                  
+@foreach ($leaveRecords as $item)
+                  <tr>
+                    <td>{{$item->id}}</td>
+                    <td>{{$item->total_days}}</td>
+                    @if($item->status == 'active')
+                    <td id="act" style="color: #13ec6f; font-size: 20px">{{$item->status}}<a href="#" style="color: white;" class="btn btn-primary btn-xs" id="deactive"  data-id="{{$item->id}}"> Deactivate </a></td>
+                    @else
+                    <td id="" style="color: blue; font-size: 20px">{{$item->status}}</td>
+                    @endif
+                    <td>
+                      <a href="#" style="color: white;" class="btn btn-info btn-xs" id="active"  data-id="{{$item->id}}"> Set Active </a>
+                      <a href="#" class="btn btn-danger btn-xs" id="dayDelete" data-id="{{$item->id}}"> Delete This </a>
+                    </td>
+                  </tr>
+@endforeach
+</table>
 </div>
    
 
@@ -67,7 +102,7 @@ tr:nth-child(even) {
 
 <div class="container">
 
-    <h1 style="font-size: 40px; color: #6cb2eb;">Applying  Leave Here</h1>
+    <h1 style="font-size: 40px; color: #6cb2eb;">Applying For Leave Here</h1>
 
     <div style="position: relative">
       <div class="w3-container w3-teal" align="center">
@@ -98,11 +133,11 @@ tr:nth-child(even) {
 
        <strong>Leave Reasons:</strong>
 
-      <input id="leaveReason" class="timepicker form-control" type="text">
+      <input id="leaveReason" class="form-control" type="text">
 
 
 
-      <button  id="apply" name="apply" class="btn btn-info "> Apply For Leave </button>
+      <button  id="apply" name="apply" class="btn btn-info "> Applying For Leave  </button>
      
 
 </div>
@@ -110,26 +145,38 @@ tr:nth-child(even) {
     <div style="position: relative">
                 
 
-                <table id="reportTable">
+                <table id="reportTable2">
                   
                   <tr>
                     <th>Employee ID</th>
                     <th>Name</th>
-                    <th>Starts</th>
-                    <th>Ends</th>
+                    <th>Leave Starts From</th>
+                    <th>Leave Ends</th>
                     <th>Total Leave Days</th>
+                    <th>Leave Reasons</th>
                     <th>Approval Status</th>
+                    <th>Action</th>
                   </tr>
                   
-
+@foreach ($leaveTable as $item)
                   <tr>
-                    <td>22</td>
-                    <td>Imrul Kais Khan</td>
-                    <td>9/13/2018</td>
-                    <td>20/13/2018</td>
-                    <td>12</td>
-                    <td>Pending</td>
+                    <td>{{$item->emp_id}}</td>
+                    <td>{{$item->name}}</td>
+                    <td>{{$item->from_date}}</td>
+                    <td>{{$item->to_date}}</td>
+                    <td>{{$item->days}}</td>
+                    <td>{{$item->leave_reason}}</td>
+                    @if($item->approval == 'pending')
+                     <td id="appAct" style="color: blue; font-size: 20px">{{$item->approval}}<a href="#" style="color: white;" class="btn btn-primary btn-xs" id="approved"  data-id="{{$item->id}}"> Make Approved </a></td>
+                    @else
+                    <td id="" style="color: blue; font-size: 20px">{{$item->approval}}</td>
+                    @endif
+                    <td>
+                      <a href="#" style="color: white;" class="btn btn-info btn-xs" id="NotApproved"  data-id="{{$item->id}}"> Not Approved </a>
+                      <a href="#" class="btn btn-danger btn-xs" id="leaveDelete" data-id="{{$item->id}}"> Delete This Record </a>
+                    </td>
                   </tr>
+@endforeach
 
                 </table>
   
@@ -143,10 +190,16 @@ tr:nth-child(even) {
     $('.timepicker').datetimepicker({
 }); 
 
-
+setInterval(function(){blink()}, 1000);
+function blink() {
+        $("#act").fadeTo(1000, 0.1).fadeTo(2000, 1.0);
+        $("#deactive").fadeTo(2000, 0.1).fadeTo(1000, 1.0);
+       
+    }
 
 $(document).ready(function(){
     $("#nameSelector").change(function(){
+
        $("#for").show();
        $("#selectedEmp").show();
         val = $("#nameSelector option:selected").text();
@@ -155,19 +208,68 @@ $(document).ready(function(){
     });
 });
 
-$("#daily").click(function(e){
+$('body').delegate('#yearly_table #active','click',function(e){
+   $.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
+    var id = $(this).data('id');
+     //alert(id);
+    
+    $.post('{{ URL("/YearDaysSetActive")}}',{id:id},function(data){
+        alert('Set To Active');
+        location.reload();
+
+});
+
+});
+
+$('body').delegate('#yearly_table #deactive','click',function(e){
+   $.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
+    var id = $(this).data('id');
+     //alert(id);
+    
+    $.post('{{ URL("/YearDaysSetInActive")}}',{id:id},function(data){
+        alert('Set To InActive');
+        location.reload();
+
+});
+
+});
+
+$('body').delegate('#yearly_table #dayDelete','click',function(e){
+   $.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
+    var id = $(this).data('id');
+     //alert(id);
+    
+    $.post('{{ URL("/YearDaysDelete")}}',{id:id},function(data){
+        alert('Successfully Deleted');
+        location.reload();
+
+});
+
+});
+
+$("#setLeaveBtn").click(function(e){
     e.preventDefault();
   
-    var starts = $('#frmInput').val();
-    var ends = $('#toInput').val();
-    var id = $('#nameSelector').val();
+    var value = $('#setLeave').val();
+    
     
 //alert(name);
     
 
-    var data = {   "starts":starts,
-                    "ends": ends,
-                    "id":id,
+    var data = {   "value":value
+                    
                     
                 };
 
@@ -179,70 +281,19 @@ $("#daily").click(function(e){
 
         $.ajax({
                     type: "POST",
-                    url: '/calculateAtt',
+                    url: '/setYearlyLeave',
                     dataType: 'json',
                     data : data,
                    
                     success: function (data) {
-                      $('#reportTable tbody').empty();
-                       $.each(data.name, function(i, user){
                       
                     
-                          var $tr = $('<tr>').append(
-                            $('<td>').text('Name'),
-                          $('<td>').text(user.name)).appendTo('#reportTable');
-                          //$('<td>').text(user.checkIN)
-                         
-                          //$("#emp_name").text(user.name);
-                         // console.log(user.name);
-                          $.each(data.checkIN, function(i, user){
-                      
+                    $('#days').text('Currently Days Set To' + ' : ' +data.value+ ' : Days But its status is still Pending');
+
+                     alert('Currently Days Set To' + ' : ' +data.value+ ' : Days But its status is still Pending'); 
+                    location.reload();  
+                            
                     
-                          var $tr = $('<tr>').append(
-                          $('<td>').text('checkIN at'),
-                          $('<td>').text(user.checkIN)).appendTo('#reportTable');
-                         
-                          //$("#emp_name").text(user.name);
-                         // console.log(user.name);
-                         $.each(data.checkOUT, function(i, user){
-                      
-                    
-                          var $tr = $('<tr>').append(
-                          $('<td>').text('checkOUT at'),
-                          $('<td>').text(user.checkOUT)).appendTo('#reportTable');
-                         
-                          //$("#emp_name").text(user.name);
-                         // console.log(user.name);
-                         $.each(data.status, function(i, user){
-                      
-                    
-                          var $tr = $('<tr>').append(
-                          $('<td>').text('present at the Office'),
-                          $('<td>').text(user.staus_flag)).appendTo('#reportTable');
-                         
-                          //$("#emp_name").text(user.name);
-                         // console.log(user.name);
-
-                      });
-
-                      });
-
-                      });
-
-                      });
-                      
-                       
-                       
-                       
-                      // if(data.user2 === "YES")
-                      // {
-                      //   alert("Saved Successfully");
-                      //   location.reload();
-                      // }
-                      // else
-                      // {
-                      //   //alert("pass correct");
-                      // }
                       
                      },
                     error: function (error) {
@@ -251,6 +302,126 @@ $("#daily").click(function(e){
                 });
 
    
+});
+
+$("#apply").click(function(e){
+    e.preventDefault();
+  
+    var starts = $('#frmInput').val();
+    var ends = $('#toInput').val();
+    var reasons = $('#leaveReason').val();
+    var id = $('#nameSelector').val();
+    
+var date1 = new Date(starts);
+var date2 = new Date(ends);
+var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+//alert(diffDays);
+
+    
+
+    var data = {   "starts":starts,
+                    "ends": ends,
+                    "id":id,
+                    "reasons": reasons,
+                    "days":diffDays
+                    
+                };
+
+    $.ajaxSetup({
+    headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              }
+        });
+
+        $.ajax({
+                    type: "POST",
+                    url: '/ApplyForLeave',
+                    dataType: 'json',
+                    data : data,
+                   
+                    success: function (data) {
+                      
+                       // $.each(data.user2, function(i, user){
+                      
+                    
+                      //     var $tr = $('<tr>').append(
+                      //       $('<td>').text(user.emp_id),
+                      //       $('<td>').text(user.from_date),
+                      //       $('<td>').text(user.to_date),
+                      //       $('<td>').text(user.days),
+                      //       $('<td>').text(user.leave_reason),
+                      //       $('<td>').text(user.approval)).appendTo('#reportTable2');
+                          
+                          
+                          
+
+                      // });
+                      location.reload();
+                      
+                       
+                       
+                       
+                      
+                      
+                     },
+                    error: function (error) {
+                      //alert(error);
+                    }
+                });
+
+   
+});
+
+
+$('body').delegate('#reportTable2 #approved','click',function(e){
+   $.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
+    var id = $(this).data('id');
+     //alert(id);
+    
+    $.post('{{ URL("/LeaveSetActive")}}',{id:id},function(data){
+        alert('Set To Active');
+        location.reload();
+
+});
+});
+
+
+$('body').delegate('#reportTable2 #NotApproved','click',function(e){
+   $.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
+    var id = $(this).data('id');
+     //alert(id);
+    
+    $.post('{{ URL("/LeaveSetInActive")}}',{id:id},function(data){
+        alert('Set To Not Approved');
+        location.reload();
+
+});
+});
+
+
+$('body').delegate('#reportTable2 #leaveDelete','click',function(e){
+   $.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
+    var id = $(this).data('id');
+     //alert(id);
+    
+    $.post('{{ URL("/LeaveDelete")}}',{id:id},function(data){
+        alert('Request Deleted');
+        location.reload();
+
+});
 });
 
 

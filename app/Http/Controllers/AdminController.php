@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use DB;
 
 
+
 class AdminController extends Controller
 {
     /**
@@ -141,8 +142,166 @@ public function getLeaveView()
         $records = DB::table('employee')
             
             ->get();
-        return view('admin.leave',compact('records'));
+        $leaveRecords = DB::table('yearly_leave')
+            
+            ->get();
+
+        // $leaveTable = DB::table('leave')
+            
+        //     ->get();
+
+        $leaveTable = DB::table('employee')
+                    ->Join('leave', 'employee.id', '=', 'leave.emp_id')
+                    ->get();
+                    //dd($leaveTable);
+
+        return view('admin.leave',compact('records','leaveRecords','leaveTable'));
     }
+
+    public function setYearlyLeave(Request $request)
+    {
+        $value =$request->input('value');
+        $status ="inactive";
+        
+        
+        DB::table('yearly_leave')
+        ->insert(['total_days' => $value ,'status' => $status]);
+
+        $users = 'YES';
+
+        return response()->json([
+                                  'user2' => $users,
+                                  'value' => $value
+                                  
+                                ]);
+
+    }
+
+public function YearDaysSetActive(Request $request)
+    {
+        $id =$request->input('id');
+        
+        
+         DB::table('yearly_leave')
+        ->where('id',$id)
+        ->update(['status'=> 'active']);
+
+        $users = 'YES';
+
+        return response()->json([
+                                  'user2' => $users
+                                  
+                                ]);
+    }
+    public function YearDaysSetInActive(Request $request)
+    {
+        $id =$request->input('id');
+        
+        
+         DB::table('yearly_leave')
+        ->where('id',$id)
+        ->update(['status'=> 'inactive']);
+
+        $users = 'NO';
+
+        return response()->json([
+                                  'user2' => $users
+                                  
+                                ]);
+
+    }
+    public function YearDaysDelete(Request $request)
+    {
+         $id =$request->input('id');
+       DB::table('yearly_leave')->where('id', $id)->delete();
+
+                            
+        $users = 'DELETED';
+
+        return response()->json([
+                                  'user2' => $users
+                                  
+                                ]);
+
+    }
+    public function ApplyForLeave(Request $request)
+    {
+        $id =$request->input('id');
+        $starts =$request->input('starts');
+        $ends =$request->input('ends');
+        $reasons =$request->input('reasons');
+        $status ="pending";
+        $days = $request->input('days');;
+
+                        // $to = \Carbon\Carbon::createFromFormat('Y-m-d', now());
+                        // $from = \Carbon\Carbon::createFromFormat('Y-m-d', now());
+                        // $diff_in_hours = $to->diffInHours($from);
+                        // $time = $diff_in_hours/24;
+                        // dd($time);
+                        // dd($from , $to);
+                        // $upDay = 15-$time;
+        
+        DB::table('leave')
+        ->insert(['from_date' => $starts ,'to_date' =>$ends ,'days' =>$days,'leave_reason' =>$reasons,'approval' =>$status,'emp_id' =>$id]);
+
+        
+
+        $records = DB::table('leave')
+                   ->get();
+
+        return response()->json([
+                                  'user2' => $records
+                                  
+                                ]);
+
+    }
+public function LeaveSetActive(Request $request)
+    {
+        $id =$request->input('id');
+        
+        
+         DB::table('leave')
+        ->where('id',$id)
+        ->update(['approval'=> 'approved']);
+
+        $users = 'YES';
+
+        return response()->json([
+                                  'user2' => $users
+                                  
+                                ]);
+    }
+    public function LeaveSetInActive(Request $request)
+    {
+        $id =$request->input('id');
+        
+        
+         DB::table('leave')
+        ->where('id',$id)
+        ->update(['approval'=> 'pending']);
+
+        $users = 'NO';
+
+        return response()->json([
+                                  'user2' => $users
+                                  
+                                ]);
+    }
+    public function LeaveDelete(Request $request)
+    {
+         $id =$request->input('id');
+       DB::table('leave')->where('id', $id)->delete();
+
+                            
+        $users = 'DELETED';
+
+        return response()->json([
+                                  'user2' => $users
+                                  
+                                ]);
+
+    }
+
     public function searchView()
     {
         $records = DB::table('employee')
@@ -200,23 +359,42 @@ public function getLeaveView()
 
         $resultName = DB::table('employee')
                     ->select('name')
-                    ->where('id', '=', $id)->get();
+                    ->where('id', '=', $id)->pluck('name');
 
-        $resultCheckIN = DB::table('employee')
+        $resultCheckIN = DB::table('attendance_histories')
                     ->select('checkIN')
-                    ->where('id', '=', $id)->get();
+                    ->where('emp_id', '=', $id)
+                    ->pluck('checkIN');
 
-        $resultCheckOUT = DB::table('employee')
+        $resultCheckOUT = DB::table('attendance_histories')
                     ->select('checkOUT')
-                    ->where('id', '=', $id)->get();
+                    ->where('emp_id', '=', $id)->pluck('checkOUT');
 
         $resultStatus = DB::table('employee')
                     ->select('staus_flag')
-                    ->where('id', '=', $id)->get();
-
-        $users = 'DELETED';
-
+                    ->where('id', '=', $id)->pluck('staus_flag');
        // dd($resultName,$resultCheckIN,$resultCheckOUT,$resultStatus);
+        if(isset($resultCheckIN) && isset($resultCheckOUT))
+        {
+            $to = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $resultCheckIN[0]);
+                     $from = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $resultCheckOUT[0]);
+                     $diff_in_hours = $to->diffInHours($from);
+dd($diff_in_hours);
+        }
+                     
+                       // dd($diff_in_hours);
+                        // $time = $diff_in_hours/24;
+                        // // dd($from , $to);
+                        // $upDay = 15-$time;
+// $fdate = $resultCheckIN[0];
+// $tdate = $resultCheckOUT[0];
+// $datetime1 = new \DateTime($fdate);
+// $datetime2 = new \DateTime($tdate);
+// $interval = $datetime1->diff($datetime2);
+// //$days = $interval->format('%a');
+// dd($interval);
+
+       
 
         return response()->json([
                                   'name' => $resultName,

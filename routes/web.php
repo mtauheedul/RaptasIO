@@ -57,8 +57,19 @@ Route::GET('/holidayView', 'AdminController@holidayView');
 Route::GET('/WorkHourView', 'AdminController@WorkHourView');
 
 
+Route::POST('/YearDaysSetActive', 'AdminController@YearDaysSetActive');
+Route::POST('/YearDaysSetInActive', 'AdminController@YearDaysSetInActive');
+Route::POST('/YearDaysDelete', 'AdminController@YearDaysDelete');
 
 
+Route::POST('/ApplyForLeave', 'AdminController@ApplyForLeave');
+Route::POST('/LeaveSetActive', 'AdminController@LeaveSetActive');
+Route::POST('/LeaveSetInActive', 'AdminController@LeaveSetInActive');
+Route::POST('/LeaveDelete', 'AdminController@LeaveDelete');
+
+
+
+Route::POST('/setYearlyLeave', 'AdminController@setYearlyLeave');
 Route::GET('/getLeaveView', 'AdminController@getLeaveView');
 Route::GET('/searchView', 'AdminController@searchView');
 Route::GET('/get/attendance/view', 'AdminController@attendanceView');

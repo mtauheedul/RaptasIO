@@ -35,38 +35,37 @@ tr:nth-child(even) {
 
 <div class="container">
 
-    <h1>Attendance Reporting</h1>
+    <h1 style="color:#6cb2eb;">Attendance Reporting Between Dates</h1>
 
     <div style="position: relative">
       <div class="w3-container w3-teal" align="center">
-        <p id="for" style="display: none;">:::::: Reporting For ::::::</p>
-        <h1 style="display: none;" id="selectedEmp" name="selectedEmp">Employee Name</h1>
+        <p id="for" style="display: none; color:#38c172;" >:::::: Reporting For ::::::</p>
+        <h1 style="display: none; color:#38c172;" id="selectedEmp" name="selectedEmp">Employee Name</h1>
   
   
       </div>
-      <strong>Select An Employee</strong>
+      <strong style="color:#6cb2eb;">Select An Employee</strong>
  
        <select id="nameSelector" class="form-control input-lg" placeholder="Please Select An Employee">
                  
                 @foreach ($records as $item)
-                    <option value="{{$item->id}}">{{$item->name}}</option>
+                    <option style="color:#6cb2eb;" value="{{$item->id}}">{{$item->name}}</option>
                 @endforeach
       </select> 
 
-      <strong>From Date:</strong>
+      <strong style="color:#6cb2eb;">From Date:</strong>
 
       <input id="frmInput" class="timepicker form-control" type="text">
 
 </div>
 <div style="position: relative">
 
-      <strong>To Date:</strong>
+      <strong style="color:#6cb2eb;">To Date:</strong>
 
       <input id="toInput" class="timepicker form-control" type="text">
 
-      <button  id="daily" name="daily" class="btn btn-info "> Daily Report </button>
-      <button  id="weekly" name="weekly" class="btn btn-primary "> Weekly Report </button>
-      <button  id="monthly" name="monthly" class="btn btn-info "> Monthly Report </button>
+      <button  id="daily" name="daily" class="btn btn-info "> Show Report </button>
+     
 
 </div>
 
@@ -75,6 +74,7 @@ tr:nth-child(even) {
 
                 <table id="reportTable">
                   <tr>
+                    <th>Day</th>
                     <th>Employee Name</th>
                     <th>Email</th>
                     <th>Attendance</th>
@@ -84,6 +84,7 @@ tr:nth-child(even) {
                   
 
                   <tr>
+                    <td>Day</td>
                     <td>Imrul Kais Khan</td>
                     <td>imrulkk69@gmail.com</td>
                     <td>present</td>
@@ -116,12 +117,24 @@ $(document).ready(function(){
     });
 });
 
+
+                          var date1;
+                          var date2;
+                          var timeDiff;
+                          var diffDays; 
+
+                          var inCHK;
+                          var outCHK;
+
+
+
 $("#daily").click(function(e){
     e.preventDefault();
   
     var starts = $('#frmInput').val();
     var ends = $('#toInput').val();
     var id = $('#nameSelector').val();
+   
     
 //alert(name);
     
@@ -145,65 +158,61 @@ $("#daily").click(function(e){
                     data : data,
                    
                     success: function (data) {
-                      $('#reportTable tbody').empty();
-                       $.each(data.name, function(i, user){
+                      // $('#reportTable tbody').empty();
+                       
+//                       $.each(data.checkIN, function(i, user){
                       
                     
-                          var $tr = $('<tr>').append(
-                            $('<td>').text('Name'),
-                          $('<td>').text(user.name)).appendTo('#reportTable');
-                          //$('<td>').text(user.checkIN)
-                         
-                          //$("#emp_name").text(user.name);
-                         // console.log(user.name);
-                          $.each(data.checkIN, function(i, user){
+//                           var $tr = $('<tr>').append(
+//                           $('<td>').text('checkIN at'),
+                          
+//                           $('<td>').text(user.checkIN)).appendTo('#reportTable');
+// inCHK =user.checkIN;
+// //alert(inCHK);
+//                        $.each(data.name, function(i, user){
                       
                     
-                          var $tr = $('<tr>').append(
-                          $('<td>').text('checkIN at'),
-                          $('<td>').text(user.checkIN)).appendTo('#reportTable');
+//                           var $tr = $('<tr>').append(
+//                             $('<td>').text('Name'),
+//                           $('<td>').text(user.name)).appendTo('#reportTable');
+                        
+                          
                          
-                          //$("#emp_name").text(user.name);
-                         // console.log(user.name);
-                         $.each(data.checkOUT, function(i, user){
+//                          $.each(data.checkOUT, function(i, user){
+                          
+//                           date1 = new Date(inCHK);
+//                           date2 = new Date(outCHK);
+//                           timeDiff = Math.abs(date2.getTime() - date1.getTime());
+//                           diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+
+
+//                           var $tr = $('<tr>').append(
+//                           $('<td>').text('checkOUT at'),
+//                           $('<td>').text(timeDiff)).appendTo('#reportTable');
+//                 outCHK =user.checkOUT; 
+//                // alert(outCHK);        
+                       
+//                          $.each(data.status, function(i, user){
                       
                     
-                          var $tr = $('<tr>').append(
-                          $('<td>').text('checkOUT at'),
-                          $('<td>').text(user.checkOUT)).appendTo('#reportTable');
+//                           var $tr = $('<tr>').append(
+//                           $('<td>').text('present at the Office'),
+//                           $('<td>').text(user.staus_flag)).appendTo('#reportTable');
                          
-                          //$("#emp_name").text(user.name);
-                         // console.log(user.name);
-                         $.each(data.status, function(i, user){
                       
-                    
-                          var $tr = $('<tr>').append(
-                          $('<td>').text('present at the Office'),
-                          $('<td>').text(user.staus_flag)).appendTo('#reportTable');
-                         
-                          //$("#emp_name").text(user.name);
-                         // console.log(user.name);
 
-                      });
+//                       });
 
-                      });
+//                       });
 
-                      });
+//                       });
 
-                      });
+//                       });
                       
                        
                        
                        
-                      // if(data.user2 === "YES")
-                      // {
-                      //   alert("Saved Successfully");
-                      //   location.reload();
-                      // }
-                      // else
-                      // {
-                      //   //alert("pass correct");
-                      // }
+                    
                       
                      },
                     error: function (error) {

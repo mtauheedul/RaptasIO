@@ -110,7 +110,7 @@
             </span>
           </a>
         </li>
-        <li class="treeview">
+      <!--   <li class="treeview">
           <a href="#">
             <i class="fa fa-pie-chart"></i>
             <span>Statistics</span>
@@ -124,7 +124,7 @@
             <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Update</a></li>
             <li><a href="pages/charts/inline.html"><i class="fa fa-circle-o"></i> Sort</a></li>
           </ul>
-        </li>
+        </li> -->
        
        
         <li class="treeview">
@@ -146,7 +146,7 @@
 
             <li><a href="{{ URL::to('/WorkHourView')}}"><i class="fa fa-circle-o"></i> Working Hour Settings</a></li>
             <li><a href="{{ URL::to('/getLeaveView')}}"><i class="fa fa-circle-o"></i> Leave Settings</a></li>
-            <li><a href="{{ URL::to('/searchView')}}"><i class="fa fa-circle-o"></i> Holiday Settings</a></li>
+            <li><a href="{{ URL::to('/getHolidayView')}}"><i class="fa fa-circle-o"></i> Holiday Settings</a></li>
 
             
 

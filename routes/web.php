@@ -47,7 +47,7 @@ Route::POST('/SetActive', 'AdminController@SetActive');
 Route::POST('/SetDeActive', 'AdminController@SetDeActive');
 Route::POST('/DeleteState', 'AdminController@DeleteState');
 
-Route::POST('/calculateAtt', 'AdminController@calculateAtt'); ///////////////////////////////////// New Route For Reporting 
+Route::POST('/calculateAtt', 'AdminController@calculateAtt'); 
 
 Route::GET('/getGraphView', 'AdminController@getGraphView');
 
@@ -55,22 +55,29 @@ Route::GET('/getGraphView', 'AdminController@getGraphView');
 
 Route::GET('/holidayView', 'AdminController@holidayView');
 Route::GET('/WorkHourView', 'AdminController@WorkHourView');
+Route::POST('/holidayDelete', 'AdminController@holidayDelete');
+Route::POST('/holidayAdd', 'AdminController@holidayAdd');
 
 
-Route::POST('/YearDaysSetActive', 'AdminController@YearDaysSetActive');
-Route::POST('/YearDaysSetInActive', 'AdminController@YearDaysSetInActive');
-Route::POST('/YearDaysDelete', 'AdminController@YearDaysDelete');
 
+Route::GET('/getLeaveView', 'AdminController@getLeaveView');
+
+Route::POST('/setYearlyLeave', 'AdminController@setYearlyLeave');
+Route::POST('/yearlySetDeactive', 'AdminController@yearlySetDeactive');
+Route::POST('/yearlySetActive', 'AdminController@yearlySetActive');
+Route::POST('/yearlySetDelete', 'AdminController@yearlySetDelete');
 
 Route::POST('/ApplyForLeave', 'AdminController@ApplyForLeave');
 Route::POST('/LeaveSetActive', 'AdminController@LeaveSetActive');
-Route::POST('/LeaveSetInActive', 'AdminController@LeaveSetInActive');
+// Route::POST('/LeaveSetInActive', 'AdminController@LeaveSetInActive');
 Route::POST('/LeaveDelete', 'AdminController@LeaveDelete');
 
+Route::GET('/getHolidayView', 'AdminController@getHolidayView');
 
 
-Route::POST('/setYearlyLeave', 'AdminController@setYearlyLeave');
-Route::GET('/getLeaveView', 'AdminController@getLeaveView');
+
+
+
 Route::GET('/searchView', 'AdminController@searchView');
 Route::GET('/get/attendance/view', 'AdminController@attendanceView');
 Route::GET('/expiredWindow', 'UserController@expiery');

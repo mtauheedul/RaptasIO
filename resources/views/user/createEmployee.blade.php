@@ -1,23 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
- 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
-<body> -->
+
 
 <div class="w3-container " style="background: #40b0d7; color:white; font-size: 20px; padding-right: 40px; 
   " align="center">
   <h2>Create New Employee</h2>
 </div>
-<div class="w3-container">
+<div class="w3-container" style="background: #40b0d7; color:white; font-size: 20px; padding-left: 80px; padding-right: 80px; padding-bottom: 80px;" >
   <form method="POST" action="{{ URL::to('store/emp')}}">
     @csrf
     
@@ -27,7 +17,7 @@
     </div>
     <div class="form-group">
       <label for="email">Email:</label>
-      <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+      <input type="email"  class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" id="email" placeholder="Enter email" name="email">
     </div>
     <div class="form-group">
       <label for="designation">Designation:</label>
@@ -42,21 +32,14 @@
       <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pwd">
     </div>
    
-    <button type="submit" class="btn btn-info btn-lg pull-right">SAVE</button>
+    <button type="submit" class="form-control btn btn-primary ">SAVE</button>
   </form>
 </div>
-<!-- <a class="btn btn-info btn-lg" id="alert-target" >Click me!</a>
-
 
 
 <script type="text/javascript">
-$(document).ready(function(){
-   $("#alert-target").click(function(event){
-   alert("asd");
-   });
-   });
+
  
-</script> -->
-<!-- </body>
-</html> -->
+</script> 
+
 @endsection

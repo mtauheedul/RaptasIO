@@ -56,34 +56,51 @@ tr:nth-child(even) {
       <strong>From Date:</strong>
 
       <input id="frmInput" class="timepicker form-control" type="text">
-
-</div>
-<div style="position: relative">
-
       <strong>To Date:</strong>
 
       <input id="toInput" class="timepicker form-control" type="text">
 
-      <button  id="daily" name="daily" class="btn btn-info "> Daily Report </button>
-      <button  id="weekly" name="weekly" class="btn btn-primary "> Weekly Report </button>
-      <button  id="monthly" name="monthly" class="btn btn-info "> Monthly Report </button>
+</div>
+<div style="position: relative; padding-top: 30px; padding-bottom: 20px;">
+
+      
+
+      <button  id="absent" name="absent" class="btn btn-danger "> See Absent Report </button>
+
+      <button  id="totalWR" name="totalWR" class="btn btn-info "> Total Working Hours </button>
+
+      <button  id="lateCount" name="lateCount" class="btn btn-primary "> Late Count </button>
+
+      <button  id="onLeave" name="onLeave" class="btn btn-danger "> On Leave Status </button>
+
+      <button  id="all" name="all" class="btn btn-info "> Search All In </button>
+     
 
 </div>
 
     <div style="position: relative">
                 
 
-                <table id="reportTable">
-                  <tr>
+                <table id="reportTable" class="table-responsive table-condensed table-striped table-hover ">
+                <thead>
+
+                    <tr>
+
                     <th>Employee Name</th>
                     <th>Email</th>
                     <th>Attendance</th>
                     <th>On Leave</th>
                     <th>Total Woring Hour</th>
-                  </tr>
+
+                    </tr>
+
+                </thead>
                   
+                  
+                <tbody>
 
                   <tr>
+
                     <td>Imrul Kais Khan</td>
                     <td>imrulkk69@gmail.com</td>
                     <td>present</td>
@@ -92,6 +109,7 @@ tr:nth-child(even) {
                    
                   </tr>
 
+                </tbody>
                 </table>
   
 
@@ -102,6 +120,7 @@ tr:nth-child(even) {
 <script type="text/javascript">
 
     $('.timepicker').datetimepicker({
+      format: 'YY/MM/DD'
 }); 
 
 
@@ -110,23 +129,24 @@ $(document).ready(function(){
     $("#nameSelector").change(function(){
        $("#for").show();
        $("#selectedEmp").show();
-        val = $("#nameSelector option:selected").text();
-        $("#selectedEmp").text(val);
-        //alert(val);
+val =  $("#nameSelector option:selected").text();
+       $("#selectedEmp").text(val);
+        
     });
 });
 
-$("#daily").click(function(e){
+$("#absent").click(function(e){
     e.preventDefault();
   
     var starts = $('#frmInput').val();
     var ends = $('#toInput').val();
     var id = $('#nameSelector').val();
     
-//alert(name);
+
     
 
-    var data = {   "starts":starts,
+    var data = {   
+                    "starts":starts,
                     "ends": ends,
                     "id":id,
                     
@@ -146,49 +166,13 @@ $("#daily").click(function(e){
                    
                     success: function (data) {
                       $('#reportTable tbody').empty();
-                       $.each(data.name, function(i, user){
+                       $.each(data.checkIN, function(i, user){
                       
-                    
+                   
                           var $tr = $('<tr>').append(
-                            $('<td>').text('Name'),
+                          $('<td>').text('Name'),
                           $('<td>').text(user.name)).appendTo('#reportTable');
-                          //$('<td>').text(user.checkIN)
-                         
-                          //$("#emp_name").text(user.name);
-                         // console.log(user.name);
-                          $.each(data.checkIN, function(i, user){
-                      
-                    
-                          var $tr = $('<tr>').append(
-                          $('<td>').text('checkIN at'),
-                          $('<td>').text(user.checkIN)).appendTo('#reportTable');
-                         
-                          //$("#emp_name").text(user.name);
-                         // console.log(user.name);
-                         $.each(data.checkOUT, function(i, user){
-                      
-                    
-                          var $tr = $('<tr>').append(
-                          $('<td>').text('checkOUT at'),
-                          $('<td>').text(user.checkOUT)).appendTo('#reportTable');
-                         
-                          //$("#emp_name").text(user.name);
-                         // console.log(user.name);
-                         $.each(data.status, function(i, user){
-                      
-                    
-                          var $tr = $('<tr>').append(
-                          $('<td>').text('present at the Office'),
-                          $('<td>').text(user.staus_flag)).appendTo('#reportTable');
-                         
-                          //$("#emp_name").text(user.name);
-                         // console.log(user.name);
-
-                      });
-
-                      });
-
-                      });
+                          
 
                       });
                       

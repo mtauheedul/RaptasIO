@@ -35,36 +35,45 @@ tr:nth-child(even) {
 
 <div class="container">
 
-    <h1 style="color:#6cb2eb;">Attendance Reporting Between Dates</h1>
+    <h1>Attendance Reporting</h1>
 
     <div style="position: relative">
       <div class="w3-container w3-teal" align="center">
-        <p id="for" style="display: none; color:#38c172;" >:::::: Reporting For ::::::</p>
-        <h1 style="display: none; color:#38c172;" id="selectedEmp" name="selectedEmp">Employee Name</h1>
+        <p id="for" style="display: none;">:::::: Reporting For ::::::</p>
+        <h1 style="display: none;" id="selectedEmp" name="selectedEmp">Employee Name</h1>
   
   
       </div>
-      <strong style="color:#6cb2eb;">Select An Employee</strong>
+      <strong>Select An Employee</strong>
  
        <select id="nameSelector" class="form-control input-lg" placeholder="Please Select An Employee">
                  
                 @foreach ($records as $item)
-                    <option style="color:#6cb2eb;" value="{{$item->id}}">{{$item->name}}</option>
+                    <option value="{{$item->id}}">{{$item->name}}</option>
                 @endforeach
       </select> 
 
-      <strong style="color:#6cb2eb;">From Date:</strong>
+      <strong>From Date:</strong>
 
       <input id="frmInput" class="timepicker form-control" type="text">
-
-</div>
-<div style="position: relative">
-
-      <strong style="color:#6cb2eb;">To Date:</strong>
+      <strong>To Date:</strong>
 
       <input id="toInput" class="timepicker form-control" type="text">
 
-      <button  id="daily" name="daily" class="btn btn-info "> Show Report </button>
+</div>
+<div style="position: relative; padding-top: 30px; padding-bottom: 20px;">
+
+      
+
+      <button  id="absent" name="absent" class="btn btn-danger "> See Absent Report </button>
+
+      <button  id="totalWR" name="totalWR" class="btn btn-info "> Total Working Hours </button>
+
+      <button  id="lateCount" name="lateCount" class="btn btn-primary "> Late Count </button>
+
+      <button  id="onLeave" name="onLeave" class="btn btn-danger "> On Leave Status </button>
+
+      <button  id="all" name="all" class="btn btn-info "> Search All In </button>
      
 
 </div>
@@ -72,19 +81,26 @@ tr:nth-child(even) {
     <div style="position: relative">
                 
 
-                <table id="reportTable">
-                  <tr>
-                    <th>Day</th>
+                <table id="reportTable" class="table-responsive table-condensed table-striped table-hover ">
+                <thead>
+
+                    <tr>
+
                     <th>Employee Name</th>
                     <th>Email</th>
                     <th>Attendance</th>
                     <th>On Leave</th>
                     <th>Total Woring Hour</th>
-                  </tr>
+
+                    </tr>
+
+                </thead>
                   
+                  
+                <tbody>
 
                   <tr>
-                    <td>Day</td>
+
                     <td>Imrul Kais Khan</td>
                     <td>imrulkk69@gmail.com</td>
                     <td>present</td>
@@ -93,6 +109,7 @@ tr:nth-child(even) {
                    
                   </tr>
 
+                </tbody>
                 </table>
   
 
@@ -103,6 +120,7 @@ tr:nth-child(even) {
 <script type="text/javascript">
 
     $('.timepicker').datetimepicker({
+      format: 'YY/MM/DD'
 }); 
 
 
@@ -111,35 +129,24 @@ $(document).ready(function(){
     $("#nameSelector").change(function(){
        $("#for").show();
        $("#selectedEmp").show();
-        val = $("#nameSelector option:selected").text();
-        $("#selectedEmp").text(val);
-        //alert(val);
+val =  $("#nameSelector option:selected").text();
+       $("#selectedEmp").text(val);
+        
     });
 });
 
-
-                          var date1;
-                          var date2;
-                          var timeDiff;
-                          var diffDays; 
-
-                          var inCHK;
-                          var outCHK;
-
-
-
-$("#daily").click(function(e){
+$("#absent").click(function(e){
     e.preventDefault();
   
     var starts = $('#frmInput').val();
     var ends = $('#toInput').val();
     var id = $('#nameSelector').val();
-   
-    
-//alert(name);
     
 
-    var data = {   "starts":starts,
+    
+
+    var data = {   
+                    "starts":starts,
                     "ends": ends,
                     "id":id,
                     
@@ -158,61 +165,29 @@ $("#daily").click(function(e){
                     data : data,
                    
                     success: function (data) {
-                      // $('#reportTable tbody').empty();
-                       
-//                       $.each(data.checkIN, function(i, user){
+                      $('#reportTable tbody').empty();
+                       $.each(data.checkIN, function(i, user){
                       
-                    
-//                           var $tr = $('<tr>').append(
-//                           $('<td>').text('checkIN at'),
+                   
+                          var $tr = $('<tr>').append(
+                          $('<td>').text('Name'),
+                          $('<td>').text(user.name)).appendTo('#reportTable');
                           
-//                           $('<td>').text(user.checkIN)).appendTo('#reportTable');
-// inCHK =user.checkIN;
-// //alert(inCHK);
-//                        $.each(data.name, function(i, user){
-                      
-                    
-//                           var $tr = $('<tr>').append(
-//                             $('<td>').text('Name'),
-//                           $('<td>').text(user.name)).appendTo('#reportTable');
-                        
-                          
-                         
-//                          $.each(data.checkOUT, function(i, user){
-                          
-//                           date1 = new Date(inCHK);
-//                           date2 = new Date(outCHK);
-//                           timeDiff = Math.abs(date2.getTime() - date1.getTime());
-//                           diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
 
-
-//                           var $tr = $('<tr>').append(
-//                           $('<td>').text('checkOUT at'),
-//                           $('<td>').text(timeDiff)).appendTo('#reportTable');
-//                 outCHK =user.checkOUT; 
-//                // alert(outCHK);        
-                       
-//                          $.each(data.status, function(i, user){
-                      
-                    
-//                           var $tr = $('<tr>').append(
-//                           $('<td>').text('present at the Office'),
-//                           $('<td>').text(user.staus_flag)).appendTo('#reportTable');
-                         
-                      
-
-//                       });
-
-//                       });
-
-//                       });
-
-//                       });
+                      });
                       
                        
                        
                        
-                    
+                      // if(data.user2 === "YES")
+                      // {
+                      //   alert("Saved Successfully");
+                      //   location.reload();
+                      // }
+                      // else
+                      // {
+                      //   //alert("pass correct");
+                      // }
                       
                      },
                     error: function (error) {

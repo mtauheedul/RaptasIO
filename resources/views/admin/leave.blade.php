@@ -2,7 +2,9 @@
 @extends('layouts.app')
 @section('content')
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+
+ <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
 
@@ -41,9 +43,9 @@ tr:nth-child(even) {
 
       <strong >Set Total Yearly Leave Day</strong>
 
-          <input id="setLeave" class="form-control" type="text">
-      <p  style=" font-size: 14px; color: red;">**Important : Employee Can Take Leave Upto This Days **</p>
-	  <button  id="setLeaveBtn" name="setLeaveBtn" class="btn btn-info "> Set Fixed </button>
+<input id="setLeave" class="form-control" type="text">
+<p  style=" font-size: 14px; color: red;">**Important : Employee Can Take Leave Upto This Days **</p>
+	  <button  id="setYearly" name="setYearly" class="btn btn-info "> Set Fixed </button>
 </div>
 </div>
 <div class="column">
@@ -53,19 +55,16 @@ tr:nth-child(even) {
 <div class="container">
   @foreach ($leaveRecords as $item)
   @if($item->status == 'active')
-                          
+  
                             <h4><b id="days" style="font-size: 40px; color: #6cb2eb;">{{$item->total_days}} Days</b></h4>
-                            <p>Total Yearly Leave</p>
-  @endif
-  @endforeach
-
+  
+                          @endif
     
+  @endforeach
+    <p>Total Yearly Leave</p>
 </div>
 </div>
-
-
-
-<table id="yearly_table">
+<table id="yearly">
                   
                   <tr>
                     <th>ID</th>
@@ -74,24 +73,42 @@ tr:nth-child(even) {
                     <th>Action</th>
                     
                   </tr>
-  
-  
                   
-@foreach ($leaveRecords as $item)
-                  <tr>
-                    <td>{{$item->id}}</td>
-                    <td>{{$item->total_days}}</td>
-                    @if($item->status == 'active')
-                    <td id="act" style="color: #13ec6f; font-size: 20px">{{$item->status}}<a href="#" style="color: white;" class="btn btn-primary btn-xs" id="deactive"  data-id="{{$item->id}}"> Deactivate </a></td>
-                    @else
-                    <td id="" style="color: blue; font-size: 20px">{{$item->status}}</td>
-                    @endif
-                    <td>
-                      <a href="#" style="color: white;" class="btn btn-info btn-xs" id="active"  data-id="{{$item->id}}"> Set Active </a>
-                      <a href="#" class="btn btn-danger btn-xs" id="dayDelete" data-id="{{$item->id}}"> Delete This </a>
-                    </td>
-                  </tr>
-@endforeach
+
+                  @foreach ($leaveRecords as $item)
+
+                        <tr>
+                          <td>{{$item->id}}</td>
+                          <td>{{$item->total_days}}</td>
+                          
+
+                          @if($item->status != 'active')
+                          
+                            <td id="act2" style="color: blue;">{{$item->status}}</td>
+                          
+                          
+                          @else
+                          
+                            
+                            <td id="act" style="color: red; font-size: 20px">{{$item->status}}<a href="#" style="color: white;" class="btn btn-info btn-xs" id="deactive"  data-id="{{$item->id}}"> Deactivate </a></td>
+                            
+                          
+                          @endif
+                          
+                          <td> 
+                                       <a href="#" class="btn btn-success btn-xs" id="editLeave"  data-id="{{$item->id}}"> Set Active </a>
+                                       <a href="#" class="btn btn-danger btn-xs" id="deleteLeave" data-id="{{$item->id}}"> Delete This </a>
+                          </td>
+                          
+                          
+                   
+                    
+      
+                   
+                   
+                          </tr>
+                   @endforeach
+
 </table>
 </div>
    
@@ -102,7 +119,7 @@ tr:nth-child(even) {
 
 <div class="container">
 
-    <h1 style="font-size: 40px; color: #6cb2eb;">Applying For Leave Here</h1>
+    <h1 style="font-size: 40px; color: #6cb2eb;">Applying  Leave Here</h1>
 
     <div style="position: relative">
       <div class="w3-container w3-teal" align="center">
@@ -137,48 +154,65 @@ tr:nth-child(even) {
 
 
 
-      <button  id="apply" name="apply" class="btn btn-info "> Applying For Leave  </button>
+      <button  id="applyLeave" name="applyLeave" class="btn btn-info "> Apply For Leave </button>
      
 
 </div>
 
     <div style="position: relative">
                 
-
-                <table id="reportTable2">
+<table id="leave">
                   
                   <tr>
-                    <th>Employee ID</th>
-                    <th>Name</th>
-                    <th>Leave Starts From</th>
-                    <th>Leave Ends</th>
-                    <th>Total Leave Days</th>
-                    <th>Leave Reasons</th>
-                    <th>Approval Status</th>
+                    <th>Employee Name</th>
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th>Total Days</th>
+                    <th>Leave Reason</th>
+                    <th>Approval</th>
                     <th>Action</th>
+                    
                   </tr>
                   
-@foreach ($leaveTable as $item)
-                  <tr>
-                    <td>{{$item->emp_id}}</td>
-                    <td>{{$item->name}}</td>
-                    <td>{{$item->from_date}}</td>
-                    <td>{{$item->to_date}}</td>
-                    <td>{{$item->days}}</td>
-                    <td>{{$item->leave_reason}}</td>
-                    @if($item->approval == 'pending')
-                     <td id="appAct" style="color: blue; font-size: 20px">{{$item->approval}}<a href="#" style="color: white;" class="btn btn-primary btn-xs" id="approved"  data-id="{{$item->id}}"> Make Approved </a></td>
-                    @else
-                    <td id="" style="color: blue; font-size: 20px">{{$item->approval}}</td>
-                    @endif
-                    <td>
-                      <a href="#" style="color: white;" class="btn btn-info btn-xs" id="NotApproved"  data-id="{{$item->id}}"> Not Approved </a>
-                      <a href="#" class="btn btn-danger btn-xs" id="leaveDelete" data-id="{{$item->id}}"> Delete This Record </a>
-                    </td>
-                  </tr>
-@endforeach
 
-                </table>
+                  @foreach ($leaveTable as $item)
+
+                        <tr>
+                          <td>{{$item->name}}</td>
+                          <td>{{$item->from_date}}</td>
+                          <td>{{$item->to_date}}</td>
+                          <td>{{$item->days}}</td>
+                          <td>{{$item->leave_reason}}</td>
+                          
+
+                          @if($item->approval != 'approved')
+                          
+                            <td id="act2" style="color: blue;">{{$item->approval}}</td>
+                          
+                          
+                          @else
+                          
+                            
+                            <td id="act" style="color: red; font-size: 20px">{{$item->approval}} </td> 
+                            
+                          
+                          @endif
+                          
+                          <td> 
+                                       <a href="#" class="btn btn-success btn-xs" id="appEdit"  data-id="{{$item->id}}"> Make Approved </a>
+                                       <a href="#" class="btn btn-danger btn-xs" id="appDelete" data-id="{{$item->id}}"> Delete This Record</a>
+                          </td>
+                          
+                          
+                   
+                    
+      
+                   
+                   
+                          </tr>
+                   @endforeach
+
+</table>
   
 
     </div>
@@ -190,16 +224,10 @@ tr:nth-child(even) {
     $('.timepicker').datetimepicker({
 }); 
 
-setInterval(function(){blink()}, 1000);
-function blink() {
-        $("#act").fadeTo(1000, 0.1).fadeTo(2000, 1.0);
-        $("#deactive").fadeTo(2000, 0.1).fadeTo(1000, 1.0);
-       
-    }
+
 
 $(document).ready(function(){
     $("#nameSelector").change(function(){
-
        $("#for").show();
        $("#selectedEmp").show();
         val = $("#nameSelector option:selected").text();
@@ -208,70 +236,20 @@ $(document).ready(function(){
     });
 });
 
-$('body').delegate('#yearly_table #active','click',function(e){
-   $.ajaxSetup({
-  headers: {
-    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  }
-});
-    var id = $(this).data('id');
-     //alert(id);
-    
-    $.post('{{ URL("/YearDaysSetActive")}}',{id:id},function(data){
-        alert('Set To Active');
-        location.reload();
 
-});
-
-});
-
-$('body').delegate('#yearly_table #deactive','click',function(e){
-   $.ajaxSetup({
-  headers: {
-    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  }
-});
-    var id = $(this).data('id');
-     //alert(id);
-    
-    $.post('{{ URL("/YearDaysSetInActive")}}',{id:id},function(data){
-        alert('Set To InActive');
-        location.reload();
-
-});
-
-});
-
-$('body').delegate('#yearly_table #dayDelete','click',function(e){
-   $.ajaxSetup({
-  headers: {
-    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  }
-});
-    var id = $(this).data('id');
-     //alert(id);
-    
-    $.post('{{ URL("/YearDaysDelete")}}',{id:id},function(data){
-        alert('Successfully Deleted');
-        location.reload();
-
-});
-
-});
-
-$("#setLeaveBtn").click(function(e){
+$("#setYearly").click(function(e){
     e.preventDefault();
   
-    var value = $('#setLeave').val();
-    
-    
-//alert(name);
+    var setLeave = $('#setLeave').val();
+   // alert(setLeave);
+   
     
 
-    var data = {   "value":value
-                    
-                    
-                };
+    
+
+    var data = {   
+                  "setLeave":setLeave
+               };
 
     $.ajaxSetup({
     headers: {
@@ -286,14 +264,8 @@ $("#setLeaveBtn").click(function(e){
                     data : data,
                    
                     success: function (data) {
-                      
-                    
-                    $('#days').text('Currently Days Set To' + ' : ' +data.value+ ' : Days But its status is still Pending');
-
-                     alert('Currently Days Set To' + ' : ' +data.value+ ' : Days But its status is still Pending'); 
-                    location.reload();  
-                            
-                    
+                  alert("Data Save Successfully");
+                  location.reload();
                       
                      },
                     error: function (error) {
@@ -304,29 +276,33 @@ $("#setLeaveBtn").click(function(e){
    
 });
 
-$("#apply").click(function(e){
+
+$("#applyLeave").click(function(e){
     e.preventDefault();
-  
+  var id=$('#nameSelector').val();
+  //alert(id);
+    //var selectedEmp = $('#selectedEmp').val();
     var starts = $('#frmInput').val();
     var ends = $('#toInput').val();
-    var reasons = $('#leaveReason').val();
-    var id = $('#nameSelector').val();
-    
+    var leaveReason = $('#leaveReason').val();
+   // alert(setLeave);
+   
 var date1 = new Date(starts);
 var date2 = new Date(ends);
 var timeDiff = Math.abs(date2.getTime() - date1.getTime());
 var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
-//alert(diffDays);
+var days =diffDays;
 
     
 
-    var data = {   "starts":starts,
-                    "ends": ends,
-                    "id":id,
-                    "reasons": reasons,
-                    "days":diffDays
-                    
-                };
+    var data = {   
+                  "id":id,
+                  "starts":starts,
+                  "ends":ends,
+                  "leaveReason":leaveReason,
+                  "days":days
+
+               };
 
     $.ajaxSetup({
     headers: {
@@ -341,28 +317,8 @@ var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
                     data : data,
                    
                     success: function (data) {
-                      
-                       // $.each(data.user2, function(i, user){
-                      
-                    
-                      //     var $tr = $('<tr>').append(
-                      //       $('<td>').text(user.emp_id),
-                      //       $('<td>').text(user.from_date),
-                      //       $('<td>').text(user.to_date),
-                      //       $('<td>').text(user.days),
-                      //       $('<td>').text(user.leave_reason),
-                      //       $('<td>').text(user.approval)).appendTo('#reportTable2');
-                          
-                          
-                          
-
-                      // });
-                      location.reload();
-                      
-                       
-                       
-                       
-                      
+                  alert("Apply Aplication is submitted to Admin");
+                  location.reload();
                       
                      },
                     error: function (error) {
@@ -373,8 +329,7 @@ var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
    
 });
 
-
-$('body').delegate('#reportTable2 #approved','click',function(e){
+$('body').delegate('#leave #appEdit','click',function(e){
    $.ajaxSetup({
   headers: {
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -384,14 +339,70 @@ $('body').delegate('#reportTable2 #approved','click',function(e){
      //alert(id);
     
     $.post('{{ URL("/LeaveSetActive")}}',{id:id},function(data){
+        alert('Set To Approved');
+        location.reload();
+
+});
+
+});
+
+$('body').delegate('#leave #appDelete','click',function(e){
+   $.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
+    var id = $(this).data('id');
+     alert(id);
+    
+    $.post('{{ URL("/LeaveDelete")}}',{id:id},function(data){
+      
+          alert('Deleted');
+        location.reload();
+      
+
+      
+
+});
+
+});
+
+$('body').delegate('#yearly #deactive','click',function(e){
+   $.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
+    var id = $(this).data('id');
+     //alert(id);
+    
+    $.post('{{ URL("/yearlySetDeactive")}}',{id:id},function(data){
+        alert('Set To Deactive');
+        location.reload();
+
+});
+
+});
+
+
+$('body').delegate('#yearly #editLeave','click',function(e){
+   $.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
+    var id = $(this).data('id');
+     //alert(id);
+    
+    $.post('{{ URL("/yearlySetActive")}}',{id:id},function(data){
         alert('Set To Active');
         location.reload();
 
 });
+
 });
 
-
-$('body').delegate('#reportTable2 #NotApproved','click',function(e){
+$('body').delegate('#yearly #deleteLeave','click',function(e){
    $.ajaxSetup({
   headers: {
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -400,28 +411,111 @@ $('body').delegate('#reportTable2 #NotApproved','click',function(e){
     var id = $(this).data('id');
      //alert(id);
     
-    $.post('{{ URL("/LeaveSetInActive")}}',{id:id},function(data){
-        alert('Set To Not Approved');
+    $.post('{{ URL("/yearlySetDelete")}}',{id:id},function(data){
+        alert('Deleted');
         location.reload();
 
 });
+
 });
 
 
-$('body').delegate('#reportTable2 #leaveDelete','click',function(e){
-   $.ajaxSetup({
-  headers: {
-    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  }
-});
-    var id = $(this).data('id');
-     //alert(id);
+$("#daily").click(function(e){
+    e.preventDefault();
+  
+    var starts = $('#frmInput').val();
+    var ends = $('#toInput').val();
+    var id = $('#nameSelector').val();
     
-    $.post('{{ URL("/LeaveDelete")}}',{id:id},function(data){
-        alert('Request Deleted');
-        location.reload();
+//alert(name);
+    
 
-});
+    var data = {   "starts":starts,
+                    "ends": ends,
+                    "id":id,
+                    
+                };
+
+    $.ajaxSetup({
+    headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              }
+        });
+
+        $.ajax({
+                    type: "POST",
+                    url: '/calculateAtt',
+                    dataType: 'json',
+                    data : data,
+                   
+                    success: function (data) {
+                      $('#reportTable tbody').empty();
+                       $.each(data.name, function(i, user){
+                      
+                    
+                          var $tr = $('<tr>').append(
+                            $('<td>').text('Name'),
+                          $('<td>').text(user.name)).appendTo('#reportTable');
+                          //$('<td>').text(user.checkIN)
+                         
+                          //$("#emp_name").text(user.name);
+                         // console.log(user.name);
+                          $.each(data.checkIN, function(i, user){
+                      
+                    
+                          var $tr = $('<tr>').append(
+                          $('<td>').text('checkIN at'),
+                          $('<td>').text(user.checkIN)).appendTo('#reportTable');
+                         
+                          //$("#emp_name").text(user.name);
+                         // console.log(user.name);
+                         $.each(data.checkOUT, function(i, user){
+                      
+                    
+                          var $tr = $('<tr>').append(
+                          $('<td>').text('checkOUT at'),
+                          $('<td>').text(user.checkOUT)).appendTo('#reportTable');
+                         
+                          //$("#emp_name").text(user.name);
+                         // console.log(user.name);
+                         $.each(data.status, function(i, user){
+                      
+                    
+                          var $tr = $('<tr>').append(
+                          $('<td>').text('present at the Office'),
+                          $('<td>').text(user.staus_flag)).appendTo('#reportTable');
+                         
+                          //$("#emp_name").text(user.name);
+                         // console.log(user.name);
+
+                      });
+
+                      });
+
+                      });
+
+                      });
+                      
+                       
+                       
+                       
+                      // if(data.user2 === "YES")
+                      // {
+                      //   alert("Saved Successfully");
+                      //   location.reload();
+                      // }
+                      // else
+                      // {
+                      //   //alert("pass correct");
+                      // }
+                      
+                     },
+                    error: function (error) {
+                      //alert(error);
+                    }
+                });
+
+   
 });
 
 

@@ -136,6 +136,13 @@ class AdminController extends Controller
         return redirect('admin/home');
            //return response($request->all());
     }
+    public function getHolidayView()
+    {
+        $records = DB::table('holidays')
+            
+            ->get();
+        return view('admin.holidaySettings',compact('records'));
+    }
 
 public function getLeaveView()
     {
@@ -177,7 +184,7 @@ public function getLeaveView()
 
     }
 
-public function YearDaysSetActive(Request $request)
+public function yearlySetActive(Request $request)
     {
         $id =$request->input('id');
         
@@ -193,7 +200,7 @@ public function YearDaysSetActive(Request $request)
                                   
                                 ]);
     }
-    public function YearDaysSetInActive(Request $request)
+    public function yearlySetDeactive(Request $request)
     {
         $id =$request->input('id');
         
@@ -210,7 +217,7 @@ public function YearDaysSetActive(Request $request)
                                 ]);
 
     }
-    public function YearDaysDelete(Request $request)
+    public function yearlySetDelete(Request $request)
     {
          $id =$request->input('id');
        DB::table('yearly_leave')->where('id', $id)->delete();
@@ -224,17 +231,19 @@ public function YearDaysSetActive(Request $request)
                                 ]);
 
     }
+
+
     public function ApplyForLeave(Request $request)
     {
         $id =$request->input('id');
         $starts =$request->input('starts');
         $ends =$request->input('ends');
-        $reasons =$request->input('reasons');
+        $reasons =$request->input('leaveReason');
         $status ="pending";
-        $days = $request->input('days');;
+        $days = $request->input('days');
 
-                        // $to = \Carbon\Carbon::createFromFormat('Y-m-d', now());
-                        // $from = \Carbon\Carbon::createFromFormat('Y-m-d', now());
+                        // $to = \Carbon\Carbon::createFromFormat('Y-m-d', $ends);
+                        // $from = \Carbon\Carbon::createFromFormat('Y-m-d', $starts);
                         // $diff_in_hours = $to->diffInHours($from);
                         // $time = $diff_in_hours/24;
                         // dd($time);
@@ -255,7 +264,8 @@ public function YearDaysSetActive(Request $request)
                                 ]);
 
     }
-public function LeaveSetActive(Request $request)
+
+    public function LeaveSetActive(Request $request)
     {
         $id =$request->input('id');
         
@@ -271,6 +281,7 @@ public function LeaveSetActive(Request $request)
                                   
                                 ]);
     }
+
     public function LeaveSetInActive(Request $request)
     {
         $id =$request->input('id');
@@ -290,9 +301,9 @@ public function LeaveSetActive(Request $request)
     public function LeaveDelete(Request $request)
     {
          $id =$request->input('id');
-       DB::table('leave')->where('id', $id)->delete();
+       $res =DB::table('leave')->where('id', $id)->delete();
 
-                            
+                dd($res);            
         $users = 'DELETED';
 
         return response()->json([
@@ -351,6 +362,42 @@ public function LeaveSetActive(Request $request)
        
        
     }
+public function holidayAdd(Request $request)
+    {
+        $day =$request->input('day');
+        $type =$request->input('type');
+        $details =$request->input('details');
+        
+        
+        DB::table('holidays')
+        ->insert(['holiday_date' => $day ,'holidayType' =>$type ,'details' =>$details]);
+
+        $users = 'YES';
+
+        return response()->json([
+                                  'user2' => $users
+                                  
+                                ]);
+
+    }
+    public function holidayDelete(Request $request)
+    {
+        $id =$request->input('id');
+       DB::table('holidays')->where('id', $id)->delete();
+
+                            
+        $users = 'DELETED';
+
+        return response()->json([
+                                  'user2' => $users
+                                  
+                                ]);
+         
+        
+       
+       
+    }
+
     public function calculateAtt(Request $request)
     {
         $starts =$request->input('starts');
@@ -373,26 +420,17 @@ public function LeaveSetActive(Request $request)
         $resultStatus = DB::table('employee')
                     ->select('staus_flag')
                     ->where('id', '=', $id)->pluck('staus_flag');
-       // dd($resultName,$resultCheckIN,$resultCheckOUT,$resultStatus);
-        if(isset($resultCheckIN) && isset($resultCheckOUT))
-        {
+       
+        // if(isset($resultCheckIN) && isset($resultCheckOUT))
+        // {
+                    //dd($resultCheckOUT[0]);
             $to = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $resultCheckIN[0]);
-                     $from = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $resultCheckOUT[0]);
-                     $diff_in_hours = $to->diffInHours($from);
-dd($diff_in_hours);
-        }
+            $from = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', now());
+            $diff_in_hours = $to->diffInHours($from);
+            dd($diff_in_hours);
+        //}
                      
-                       // dd($diff_in_hours);
-                        // $time = $diff_in_hours/24;
-                        // // dd($from , $to);
-                        // $upDay = 15-$time;
-// $fdate = $resultCheckIN[0];
-// $tdate = $resultCheckOUT[0];
-// $datetime1 = new \DateTime($fdate);
-// $datetime2 = new \DateTime($tdate);
-// $interval = $datetime1->diff($datetime2);
-// //$days = $interval->format('%a');
-// dd($interval);
+                 
 
        
 

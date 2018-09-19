@@ -17,17 +17,13 @@ Route::get('/', function () {
 
 Auth::routes();
 
-//method="POST" action="{{ URL::to('store/emp')}}"
 
-//Route::get('/userDashboard', 'UserController@index');
 
 Route::GET('/countEmp', 'AdminController@countEmp');
 
-
-
-
 Route::POST('/store/emp', 'AdminController@store');
 Route::GET('/new/emp', 'AdminController@getEmpList');
+
 
 
 Route::POST('/verify', 'AdminController@checkStatusEmp');
@@ -35,13 +31,23 @@ Route::POST('/emp/attendance/IN', 'AdminController@attendanceIN');
 Route::POST('/emp/attendance/OUT', 'AdminController@attendanceOUT');
 
 
-
 Route::GET('/getLog', 'AdminController@getLog');
+
 Route::GET('/updateEmp', 'AdminController@updateEmpView');
 Route::POST('/doneupdateEmp', 'AdminController@updateEmp');
 Route::POST('/destroy', 'AdminController@destroy');
 
 Route::GET('/getHoliday', 'AdminController@getHoliday');
+
+
+
+
+Route::GET('/test', 'AdminController@test');
+
+
+
+
+
 Route::POST('/SetWorkHour', 'AdminController@SetWorkHour');
 Route::POST('/SetActive', 'AdminController@SetActive');
 Route::POST('/SetDeActive', 'AdminController@SetDeActive');
@@ -69,7 +75,7 @@ Route::POST('/yearlySetDelete', 'AdminController@yearlySetDelete');
 
 Route::POST('/ApplyForLeave', 'AdminController@ApplyForLeave');
 Route::POST('/LeaveSetActive', 'AdminController@LeaveSetActive');
-// Route::POST('/LeaveSetInActive', 'AdminController@LeaveSetInActive');
+
 Route::POST('/LeaveDelete', 'AdminController@LeaveDelete');
 
 Route::GET('/getHolidayView', 'AdminController@getHolidayView');

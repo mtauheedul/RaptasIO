@@ -640,6 +640,12 @@ public function holidayAdd(Request $request)
                     ->select('id')
                         ->where('password',$pass)
                         ->pluck('id');
+
+                         $getCheckInTime = DB::table('employee')
+                                ->select('checkIN')
+                                ->where('password',$pass)
+                                ->pluck('checkIN');
+
                          $checkStatus = DB::table('employee')
                     ->select('staus_flag')
                         ->where('id',$getEmpID[0])
@@ -657,8 +663,11 @@ public function holidayAdd(Request $request)
                                     ->where('password',$pass)
                                     ->update(['staus_flag'=> 'NO']);
 
-                                     DB::table('attendance_histories')
-                                ->insert(['emp_id' =>$getEmpID[0] ,'checkOUT' =>$checkOUT]);
+                                    DB::table('attendance_histories')
+                                    ->where('checkIN',$getCheckInTime[0])
+                                    ->update(['checkOUT'=> $checkOUT]);
+
+                                
                        
                           $users ='OKOUT';
 
@@ -682,6 +691,12 @@ public function holidayAdd(Request $request)
     {
        // return view('employee.attendance');
         return view('layouts.clock');
+       
+    }
+    public function test(Request $request)
+    {
+       // return view('employee.attendance');
+        return view('admin.test');
        
     }
     /**
